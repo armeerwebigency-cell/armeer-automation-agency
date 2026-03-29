@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -p tsconfig.json --noEmit && vite build",
+     "postinstall": "npm run build",
     "start": "node server.js",
     "preview": "vite preview --host 0.0.0.0"
   },
