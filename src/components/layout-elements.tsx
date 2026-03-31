@@ -500,7 +500,7 @@ async function fetchAIResponse(
   message: string,
   history: ChatMessage[]
 ): Promise<string> {
-  if (!CHATBOT_WEBHOOK_URL || CHATBOT_WEBHOOK_URL === 'https://umair787.app.n8n.cloud/webhook/chatbot') {
+  if (!CHATBOT_WEBHOOK_URL || CHATBOT_WEBHOOK_URL === 'YOUR_N8N_WEBHOOK_URL_HERE') {
     return getFallbackResponse(message);
   }
   try {
