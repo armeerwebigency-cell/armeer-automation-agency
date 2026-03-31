@@ -500,21 +500,21 @@ async function fetchAIResponse(
   message: string,
   history: ChatMessage[]
 ): Promise<string> {
-  if (!CHATBOT_WEBHOOK_URL || CHATBOT_WEBHOOK_URL === 'YOUR_N8N_WEBHOOK_URL_HERE') {
+  if (!CHATBOT_WEBHOOK_URL || CHATBOT_WEBHOOK_URL === 'https://umair787.app.n8n.cloud/webhook/chatbot') {
     return getFallbackResponse(message);
   }
   try {
-    const res = await fetch(CHATBOT_WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message,
-        history: history.map(m => ({
-          role: m.role === 'bot' ? 'assistant' : 'user',
-          content: m.text,
-        })),
-      }),
-    });
+   const res = await fetch(CHATBOT_WEBHOOK_URL, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    message,
+    history: history.map(m => ({
+      role: m.role === 'bot' ? 'assistant' : 'user',
+      content: m.text,
+    })),
+  }),
+});
     if (!res.ok) throw new Error('Webhook error');
     const data = await res.json().catch(() => null);
     if (typeof data === 'string') return data;
