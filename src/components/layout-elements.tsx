@@ -500,21 +500,19 @@ async function fetchAIResponse(
   message: string,
   history: ChatMessage[]
 ): Promise<string> {
-  if (!CHATBOT_WEBHOOK_URL || CHATBOT_WEBHOOK_URL === 'YOUR_N8N_WEBHOOK_URL_HERE') {
-    return getFallbackResponse(message);
-  }
   try {
-   const res = await fetch(CHATBOT_WEBHOOK_URL, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    message,
-    history: history.map(m => ({
-      role: m.role === 'bot' ? 'assistant' : 'user',
-      content: m.text,
-    })),
-  }),
-});
+    const res = await fetch(CHATBOT_WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message,
+        history: history.map(m => ({
+          role: m.role === 'bot' ? 'assistant' : 'user',
+          content: m.text,
+        })),
+      }),
+    });
     if (!res.ok) throw new Error('Webhook error');
     const data = await res.json().catch(() => null);
     if (typeof data === 'string') return data;
@@ -522,8 +520,7 @@ async function fetchAIResponse(
     if (data?.output) return data.output;
     if (data?.text) return data.text;
     if (data?.message) return data.message;
-    const text = await res.text().catch(() => '');
-    return text || getFallbackResponse(message);
+    return getFallbackResponse(message);
   } catch {
     return getFallbackResponse(message);
   }
