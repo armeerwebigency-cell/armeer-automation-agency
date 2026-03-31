@@ -466,7 +466,7 @@ export function Header() {
 
 // ─── CHATBOT ──────────────────────────────────────────────────────────────────
 // ↓ Paste your n8n AI chatbot webhook URL here once you set it up in n8n
-const CHATBOT_WEBHOOK_URL = 'YOUR_N8N_WEBHOOK_URL_HERE';
+const CHATBOT_WEBHOOK_URL = 'https://umair787.app.n8n.cloud/webhook/chatbot';
 
 type ChatMessage = { role: 'bot' | 'user'; text: string };
 
