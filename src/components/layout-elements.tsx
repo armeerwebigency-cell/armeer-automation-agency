@@ -544,10 +544,10 @@ export function Chatbot() {
     const text = input.trim();
     if (!text || typing) return;
     const updatedHistory: ChatMessage[] = [...messages, { role: 'user', text }];
-    setMessages(updatedHistory);
-    setInput('');
-    setTyping(true);
-    const reply = await fetchAIResponse(text, messages);
+setMessages(updatedHistory);
+setInput('');
+setTyping(true);
+const reply = await fetchAIResponse(text, updatedHistory);
     setTyping(false);
     setMessages(prev => [...prev, { role: 'bot', text: reply }]);
     if (!open) setUnread(prev => prev + 1);
