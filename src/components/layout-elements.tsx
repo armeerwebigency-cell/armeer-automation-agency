@@ -527,9 +527,10 @@ async function fetchAIResponse(
   try {
     const data = JSON.parse(raw);
     return data.response ?? data.output ?? data.text ?? data.message ?? raw;
-  } catch {
-    return raw;
-  }
+  } catch (error) {
+  console.error("Chatbot error:", error);
+  return "Sorry, I could not reach the chatbot server right now.";
+}
 }
 
 export function Chatbot() {
