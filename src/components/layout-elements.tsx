@@ -500,29 +500,35 @@ async function fetchAIResponse(
   message: string,
   history: ChatMessage[]
 ): Promise<string> {
+  const payload = {
+    message,
+    history: history.map(m => ({
+      role: m.role === 'bot' ? 'assistant' : 'user',
+      content: m.text,
+    })),
+  };
+
+  console.log("Sending payload:", payload);
+
+  const res = await fetch(CHATBOT_WEBHOOK_URL, {
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  const raw = await res.text();
+  console.log("Raw webhook response:", raw);
+
+  if (!res.ok) {
+    throw new Error(`Webhook failed: ${res.status} ${raw}`);
+  }
+
   try {
-    const res = await fetch(CHATBOT_WEBHOOK_URL, {
-      method: 'POST',
-      mode: 'cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message,
-        history: history.map(m => ({
-          role: m.role === 'bot' ? 'assistant' : 'user',
-          content: m.text,
-        })),
-      }),
-    });
-    if (!res.ok) throw new Error('Webhook error');
-    const data = await res.json().catch(() => null);
-    if (typeof data === 'string') return data;
-    if (data?.response) return data.response;
-    if (data?.output) return data.output;
-    if (data?.text) return data.text;
-    if (data?.message) return data.message;
-    return getFallbackResponse(message);
+    const data = JSON.parse(raw);
+    return data.response ?? data.output ?? data.text ?? data.message ?? raw;
   } catch {
-    return getFallbackResponse(message);
+    return raw;
   }
 }
 
